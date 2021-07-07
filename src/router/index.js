@@ -67,6 +67,7 @@ export const asyncRoutes = [
       }
     ]
   },
+  // 当访问除上述路由之外的路由时，使用'*'进行路由的匹配并重定向到404页面
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }
 ]
