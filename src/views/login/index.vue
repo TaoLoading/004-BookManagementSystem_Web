@@ -22,7 +22,7 @@
                   autocomplete="on" />
       </el-form-item>
       <el-tooltip v-model="capsTooltip"
-                  content="Caps lock is On"
+                  content="大写已开启"
                   placement="right"
                   manual>
         <el-form-item prop="password">
@@ -56,33 +56,33 @@
   </div>
 </template>
 <script>
-import { validUsername } from '@/utils/validate'
+// import { validUsername } from '@/utils/validate'
 
 export default {
   name: 'Login',
   data() {
     const validateUsername = (rule, value, callback) => {
-      if (!validUsername(value)) {
+      if (!value || value.length === 0) {
         callback(new Error('请输入用户名'))
       } else {
         callback()
       }
     }
     const validatePassword = (rule, value, callback) => {
-      if (value.length < 6) {
-        callback(new Error('请输入不小于6位的密码'))
+      if (value.length < 4) {
+        callback(new Error('请输入不小于4位的密码'))
       } else {
         callback()
       }
     }
     return {
       loginForm: {
-        username: 'admin',
-        password: '111111'
+        username: '',
+        password: ''
       },
       loginRules: {
-        username: [{ required: true, trigger: 'blur', validator: validateUsername }],
-        password: [{ required: true, trigger: 'blur', validator: validatePassword }]
+        username: [{ required: true, trigger: 'change', validator: validateUsername }],
+        password: [{ required: true, trigger: 'change', validator: validatePassword }]
       },
       passwordType: 'password',
       capsTooltip: false,
@@ -112,9 +112,27 @@ export default {
     }
   },
   methods: {
-    checkCapslock(e) {
+    // 检查大小写
+    /* checkCapslock(e) {
+      console.log(e)
       const { key } = e
       this.capsTooltip = key && key.length === 1 && (key >= 'A' && key <= 'Z')
+    }, */
+    checkCapslock({ shiftKey, key } = {}) {
+      console.log(shiftKey, key)
+      // 当key.length值为1时是在输入字母
+      if (key && key.length === 1) {
+        // 判断是否在输入大写字母
+        if ((shiftKey && (key >= 'A' && key <= 'Z')) || (!shiftKey && (key >= 'A' && key <= 'Z'))) {
+          this.capsTooltip = true
+        } else {
+          this.capsTooltip = false
+        }
+      }
+      // 小写状态时取消提示框
+      if (key === 'CapsLock' && this.capsTooltip === true) {
+        this.capsTooltip = false
+      }
     },
     showPwd() {
       if (this.passwordType === 'password') {
