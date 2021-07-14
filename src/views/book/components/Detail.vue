@@ -21,6 +21,7 @@
       <el-row>
         <warning />
         <el-col :span="24">
+          <!-- 电子书上传区域 -->
           <ebook-upload
             :file-list="fileList"
             :disabled="isEdit"
@@ -29,6 +30,7 @@
           />
         </el-col>
         <el-col :span="24">
+          <!-- 电子书信息表格 -->
           <el-form-item prop="title">
             <MdInput
               v-model="postForm.title"
@@ -146,6 +148,7 @@
                 label="封面："
                 :label-width="labelWidth"
               >
+                <!-- 点击看大图 -->
                 <a
                   v-if="postForm.cover"
                   :href="postForm.cover"
