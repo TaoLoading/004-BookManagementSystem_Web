@@ -252,12 +252,35 @@ export default {
       this.fileList = [{ name: originalName, url }]
       this.contentsTree = contentsTree
     },
+    setDefaultData() {
+      this.postForm = {
+        title: '',
+        author: '',
+        publisher: '',
+        language: '',
+        rootFile: '',
+        cover: '',
+        originalName: '',
+        url: '',
+        contents: '',
+        contentsTree: '',
+        fileName: '',
+        coverUrl: '',
+        filePath: '',
+        unzipPath: ''
+      }
+      this.fileList = []
+      this.contentsTree = []
+    },
+    // 读取上传的图书信息
     onUploadSuccess(data) {
-      console.log('onUploadSuccess', data)
+      // console.log('上传成功')
       this.setData(data)
     },
+    // 移除上传的图书信息
     onUploadRemove() {
-      console.log('onUploadRemove')
+      // console.log('移除成功')
+      this.setDefaultData()
     },
     submitForm() {
       this.loading = true
