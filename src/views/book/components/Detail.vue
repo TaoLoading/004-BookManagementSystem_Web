@@ -2,6 +2,7 @@
   <el-form
     ref="postForm"
     :model="postForm"
+    :rules="rules"
   >
     <sticky :class-name="'sub-navbar'">
       <el-button
@@ -44,6 +45,7 @@
           <el-row>
             <el-col :span="12">
               <el-form-item
+                prop="author"
                 label="作者："
                 :label-width="labelWidth"
               >
@@ -55,6 +57,7 @@
             </el-col>
             <el-col :span="12">
               <el-form-item
+                prop="publisher"
                 label="出版社："
                 :label-width="labelWidth"
               >
@@ -68,6 +71,7 @@
           <el-row>
             <el-col :span="12">
               <el-form-item
+                prop="language"
                 label="语言："
                 :label-width="labelWidth"
               >
@@ -200,16 +204,36 @@ export default {
     isEdit: Boolean
   },
   data() {
+    // 字段映射
+    const fields = {
+      title: '标题',
+      author: '作者',
+      publisher: '出版社',
+      language: '语言'
+    }
+    // 校验规则
+    const validateRequire = (rule, value, callback) => {
+      if (value.length === 0) {
+        callback(new Error(fields[rule.field] + '必须填写'))
+      }
+    }
     return {
       loading: false,
       postForm: {
         ebook_uri: ''
       },
       fileList: [],
-      labelWidth: '120px'
+      labelWidth: '120px',
+      rules: {
+        title: [{ validator: validateRequire }],
+        author: [{ validator: validateRequire }],
+        publisher: [{ validator: validateRequire }],
+        language: [{ validator: validateRequire }]
+      }
     }
   },
   methods: {
+    // 点击目录跳转到对应文件
     onContentClick(data) {
       if (data.text) {
         window.open(data.text)
@@ -271,6 +295,7 @@ export default {
       }
       this.fileList = []
       this.contentsTree = []
+      // location.reload()
     },
     // 读取上传的图书信息
     onUploadSuccess(data) {
@@ -282,11 +307,22 @@ export default {
       // console.log('移除成功')
       this.setDefaultData()
     },
+    // 提交表单
     submitForm() {
-      this.loading = true
-      setTimeout(() => {
-        this.loading = false
-      }, 1000)
+      if (!this.loading) {
+        this.loading = true
+        this.$refs.postForm.validate((valid, fields) => {
+          if (valid) {
+            // 正常提交
+          } else {
+            // 不符合校验规则时提示
+            const message = fields[Object.keys(fields)[0]][0].message
+            console.log(message)
+            this.$message({ message, type: 'error' })
+            this.loading = false
+          }
+        })
+      }
     },
     showGuide() {
       console.log('show guide...')
