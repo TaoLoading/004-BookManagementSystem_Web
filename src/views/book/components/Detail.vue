@@ -135,7 +135,7 @@
                 :label-width="labelWidth"
               >
                 <el-input
-                  v-model="postForm.unzipPath"
+                  v-model="postForm.originalName"
                   placeholder="文件名称"
                   disabled
                 />
@@ -150,12 +150,12 @@
               >
                 <!-- 点击看大图 -->
                 <a
-                  v-if="postForm.cover"
-                  :href="postForm.cover"
+                  v-if="postForm.coverUrl"
+                  :href="postForm.coverUrl"
                   target="_blank"
                 >
                   <img
-                    :src="postForm.cover"
+                    :src="postForm.coverUrl"
                     class="preview-img"
                   >
                 </a>
@@ -173,7 +173,10 @@
                   v-if="postForm.contents && postForm.contents.length > 0"
                   class="contents-wrapper"
                 >
-                  <el-tree />
+                  <el-tree
+                    :data="contentsTree"
+                    @node-click="onContentClick"
+                  />
                 </div>
                 <span v-else>无</span>
               </el-form-item>
@@ -207,8 +210,51 @@ export default {
     }
   },
   methods: {
-    onUploadSuccess() {
-      console.log('onUploadSuccess')
+    onContentClick(data) {
+      if (data.text) {
+        window.open(data.text)
+      }
+    },
+    setData(data) {
+      const {
+        title,
+        author,
+        publisher,
+        language,
+        rootFile,
+        cover,
+        originalName,
+        url,
+        contents,
+        contentsTree,
+        fileName,
+        coverUrl,
+        filePath,
+        unzipPath
+      } = data
+      this.postForm = {
+        ...this.postForm,
+        title,
+        author,
+        publisher,
+        language,
+        rootFile,
+        cover,
+        originalName,
+        url,
+        contents,
+        contentsTree,
+        fileName,
+        coverUrl,
+        filePath,
+        unzipPath
+      }
+      this.fileList = [{ name: originalName, url }]
+      this.contentsTree = contentsTree
+    },
+    onUploadSuccess(data) {
+      console.log('onUploadSuccess', data)
+      this.setData(data)
     },
     onUploadRemove() {
       console.log('onUploadRemove')

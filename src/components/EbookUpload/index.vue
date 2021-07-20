@@ -70,13 +70,13 @@ export default {
     },
     // 成功信息提示框
     onSuccess(response, file) {
-      const { code, msg } = response
+      const { code, msg, data } = response
       if (code === 0) {
         this.$message({
           message: msg,
           type: 'success'
         })
-        this.$emit('onSuccess', file)
+        this.$emit('onSuccess', data)
       } else {
         this.$message({
           message: (msg && `上传失败，失败原因：${msg}`) || '上传失败',
