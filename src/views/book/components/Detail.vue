@@ -215,6 +215,8 @@ export default {
     const validateRequire = (rule, value, callback) => {
       if (value.length === 0) {
         callback(new Error(fields[rule.field] + '必须填写'))
+      } else {
+        callback()
       }
     }
     return {
@@ -317,7 +319,6 @@ export default {
           } else {
             // 不符合校验规则时提示
             const message = fields[Object.keys(fields)[0]][0].message
-            console.log(message)
             this.$message({ message, type: 'error' })
             this.loading = false
           }
