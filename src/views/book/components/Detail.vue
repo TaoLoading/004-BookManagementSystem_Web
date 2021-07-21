@@ -326,7 +326,6 @@ export default {
           if (valid) {
             // 正常提交
             const book = Object.assign({}, this.postForm)
-            delete book.contents
             delete book.contentsTree
             if (!this.isEdit) {
               // 创建图书模式
