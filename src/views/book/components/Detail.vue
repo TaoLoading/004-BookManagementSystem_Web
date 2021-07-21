@@ -197,6 +197,7 @@ import Sticky from '../../../components/Sticky'
 import Warning from './Warning'
 import EbookUpload from '../../../components/EbookUpload'
 import MdInput from '../../../components/MDinput'
+import createBook from '../../../api/book'
 
 export default {
   components: { MdInput, Sticky, Warning, EbookUpload },
@@ -316,6 +317,17 @@ export default {
         this.$refs.postForm.validate((valid, fields) => {
           if (valid) {
             // 正常提交
+            const book = Object.assign({}, this.postForm)
+            console.log(book)
+            delete book.contents
+            delete book.contentsTree
+            if (!this.isEdit) {
+              // 创建图书模式
+              createBook(book)
+            } else {
+              // 更新图书模式
+              // updateBook(book)
+            }
           } else {
             // 不符合校验规则时提示
             const message = fields[Object.keys(fields)[0]][0].message
