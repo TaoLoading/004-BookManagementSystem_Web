@@ -83,6 +83,7 @@
             </el-col>
             <el-col :span="12">
               <el-form-item
+                prop="rootFile"
                 label="根文件："
                 :label-width="labelWidth"
               >
@@ -97,6 +98,7 @@
           <el-row>
             <el-col :span="12">
               <el-form-item
+                prop="filePath"
                 label="文件路径："
                 :label-width="labelWidth"
               >
@@ -109,6 +111,7 @@
             </el-col>
             <el-col :span="12">
               <el-form-item
+                prop="unzipPath"
                 label="解压路径："
                 :label-width="labelWidth"
               >
@@ -123,11 +126,12 @@
           <el-row>
             <el-col :span="12">
               <el-form-item
+                prop="coverPath"
                 label="封面路径："
                 :label-width="labelWidth"
               >
                 <el-input
-                  v-model="postForm.filePath"
+                  v-model="postForm.coverPath"
                   placeholder="封面路径"
                   disabled
                 />
@@ -135,6 +139,7 @@
             </el-col>
             <el-col :span="12">
               <el-form-item
+                prop="originalName"
                 label="文件名称："
                 :label-width="labelWidth"
               >
@@ -149,6 +154,7 @@
           <el-row>
             <el-col :span="24">
               <el-form-item
+                prop="coverUrl"
                 label="封面："
                 :label-width="labelWidth"
               >
@@ -170,6 +176,7 @@
           <el-row>
             <el-col :span="24">
               <el-form-item
+                prop="contents"
                 label="目录："
                 :label-width="labelWidth"
               >
@@ -280,7 +287,7 @@ export default {
       this.contentsTree = contentsTree
     },
     setDefaultData() {
-      this.postForm = {
+      /* this.postForm = {
         title: '',
         author: '',
         publisher: '',
@@ -295,9 +302,10 @@ export default {
         coverUrl: '',
         filePath: '',
         unzipPath: ''
-      }
+      } */
       this.fileList = []
       this.contentsTree = []
+      this.$refs.postForm.resetFields()
       // location.reload()
     },
     // 读取上传的图书信息
@@ -318,12 +326,24 @@ export default {
           if (valid) {
             // 正常提交
             const book = Object.assign({}, this.postForm)
-            console.log(book)
             delete book.contents
             delete book.contentsTree
             if (!this.isEdit) {
               // 创建图书模式
-              createBook(book)
+              createBook(book).then(res => {
+                const { msg } = res
+                this.$notify({
+                  title: '上传成功',
+                  message: msg,
+                  type: 'success',
+                  duration: 2000
+                })
+                this.loading = false
+                // this.setDefaultData()
+              })
+                .catch(() => {
+                  this.loading = false
+                })
             } else {
               // 更新图书模式
               // updateBook(book)
