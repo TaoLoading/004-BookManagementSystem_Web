@@ -204,7 +204,7 @@ import Sticky from '../../../components/Sticky'
 import Warning from './Warning'
 import EbookUpload from '../../../components/EbookUpload'
 import MdInput from '../../../components/MDinput'
-import createBook from '../../../api/book'
+import { createBook, getBook } from '../../../api/book'
 
 export default {
   components: { MdInput, Sticky, Warning, EbookUpload },
@@ -242,7 +242,21 @@ export default {
       }
     }
   },
+  created() {
+    if (this.isEdit) {
+      const fileName = this.$route.params.fileName
+      console.log(fileName)
+      this.getData(fileName)
+    }
+  },
   methods: {
+    // 获取对应图书的信息并进行显示
+    getData(fileName) {
+      getBook(fileName).then(res => {
+        console.log('res是', res)
+        this.setData(res.data.book)
+      })
+    },
     // 点击目录跳转到对应文件
     onContentClick(data) {
       if (data.text) {

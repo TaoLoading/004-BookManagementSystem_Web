@@ -68,7 +68,7 @@ export const asyncRoutes = [
       },
       {
         name: 'bookEditor',
-        path: '/book/editor',
+        path: '/book/editor/:fileName',
         component: () => import('@/views/book/editor'),
         // 不在侧边栏显示
         hidden: true,
