@@ -305,6 +305,7 @@ export default {
       } */
       this.fileList = []
       this.contentsTree = []
+      // 表单重置
       this.$refs.postForm.resetFields()
       // location.reload()
     },
