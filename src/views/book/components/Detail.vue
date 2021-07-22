@@ -181,7 +181,7 @@
                 :label-width="labelWidth"
               >
                 <div
-                  v-if="postForm.contents && postForm.contents.length > 0"
+                  v-if="contentsTree && contentsTree.length > 0"
                   class="contents-wrapper"
                 >
                   <el-tree
@@ -239,13 +239,13 @@ export default {
         author: [{ validator: validateRequire }],
         publisher: [{ validator: validateRequire }],
         language: [{ validator: validateRequire }]
-      }
+      },
+      contentsTree: []
     }
   },
   created() {
     if (this.isEdit) {
       const fileName = this.$route.params.fileName
-      console.log(fileName)
       this.getData(fileName)
     }
   },
@@ -253,12 +253,12 @@ export default {
     // 获取对应图书的信息并进行显示
     getData(fileName) {
       getBook(fileName).then(res => {
-        console.log('res是', res)
         this.setData(res.data.book)
       })
     },
     // 点击目录跳转到对应文件
     onContentClick(data) {
+      console.log(data)
       if (data.text) {
         window.open(data.text)
       }
