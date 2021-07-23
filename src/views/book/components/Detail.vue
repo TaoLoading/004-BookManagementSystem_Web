@@ -204,7 +204,7 @@ import Sticky from '../../../components/Sticky'
 import Warning from './Warning'
 import EbookUpload from '../../../components/EbookUpload'
 import MdInput from '../../../components/MDinput'
-import { createBook, getBook } from '../../../api/book'
+import { createBook, getBook, updateBook } from '../../../api/book'
 
 export default {
   components: { MdInput, Sticky, Warning, EbookUpload },
@@ -258,7 +258,6 @@ export default {
     },
     // 点击目录跳转到对应文件
     onContentClick(data) {
-      console.log(data)
       if (data.text) {
         window.open(data.text)
       }
@@ -297,7 +296,7 @@ export default {
         filePath,
         unzipPath
       }
-      this.fileList = [{ name: originalName, url }]
+      this.fileList = [{ name: originalName || fileName, url }]
       this.contentsTree = contentsTree
     },
     setDefaultData() {
@@ -333,6 +332,17 @@ export default {
       // console.log('移除成功')
       this.setDefaultData()
     },
+    // 上传提示
+    Tips(res) {
+      const { msg } = res
+      this.$notify({
+        title: '上传成功',
+        message: msg,
+        type: 'success',
+        duration: 2000
+      })
+      this.loading = false
+    },
     // 提交表单
     submitForm() {
       if (!this.loading) {
@@ -345,22 +355,19 @@ export default {
             if (!this.isEdit) {
               // 创建图书模式
               createBook(book).then(res => {
-                const { msg } = res
-                this.$notify({
-                  title: '上传成功',
-                  message: msg,
-                  type: 'success',
-                  duration: 2000
-                })
-                this.loading = false
-                // this.setDefaultData()
+                this.Tips(res)
               })
                 .catch(() => {
                   this.loading = false
                 })
             } else {
               // 更新图书模式
-              // updateBook(book)
+              updateBook(book).then(res => {
+                this.Tips(res)
+              })
+                .catch(() => {
+                  this.loading = false
+                })
             }
           } else {
             // 不符合校验规则时提示
