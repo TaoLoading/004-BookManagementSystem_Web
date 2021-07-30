@@ -58,13 +58,13 @@ export const asyncRoutes = [
     component: Layout,
     redirect: '/book/create',
     // roles限制权限
-    meta: { title: '图书管理', icon: 'documenttation', roles: ['admin'] },
+    meta: { title: '电子书管理', icon: 'documenttation', roles: ['admin'] },
     children: [
       {
         name: 'bookCreate',
         path: '/book/create',
         component: () => import('@/views/book/create'),
-        meta: { title: '上传图书', icon: 'edit', roles: ['admin'] }
+        meta: { title: '上传电子书', icon: 'edit', roles: ['admin'] }
       },
       {
         name: 'bookEditor',
@@ -72,13 +72,13 @@ export const asyncRoutes = [
         component: () => import('@/views/book/editor'),
         // 不在侧边栏显示
         hidden: true,
-        meta: { title: '编辑图书', icon: 'edit', roles: ['admin'], activeMenu: '/book/list' }
+        meta: { title: '编辑电子书', icon: 'edit', roles: ['admin'], activeMenu: '/book/list' }
       },
       {
         name: 'bookList',
         path: '/book/list',
         component: () => import('@/views/book/list'),
-        meta: { title: '图书列表', icon: 'list', roles: ['editor'] }
+        meta: { title: '电子书列表', icon: 'list', roles: ['editor'] }
       }
     ]
   },

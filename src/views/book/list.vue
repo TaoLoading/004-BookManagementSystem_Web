@@ -1,5 +1,6 @@
 <template>
   <div class="app-container">
+    <!-- 菜单栏 -->
     <div class="filter-container">
       <el-input
         v-model="listQuery.title"
@@ -21,7 +22,6 @@
         @clear="handleFilter"
         @blur="handleFilter"
       />
-      <!-- 下拉菜单 -->
       <el-select
         v-model="listQuery.category"
         placeholder="分类"
@@ -29,7 +29,12 @@
         class="filter-item"
         @change="handleFilter"
       >
-        <el-option v-for="item in categoryList" :key="item.value" :label="item.label" :value="item.label" />
+        <el-option
+          v-for="item in categoryList"
+          :key="item.value"
+          :label="item.label+'('+item.num+')'"
+          :value="item.label"
+        />
       </el-select>
       <el-button
         v-waves
@@ -59,6 +64,7 @@
         显示封面
       </el-checkbox>
     </div>
+    <!-- 表格栏 -->
     <el-table
       :key="tableKey"
       v-loading="listLoading"
@@ -77,22 +83,52 @@
         width="80"
         :class-name="getSortClass('id')"
       />
-      <el-table-column label="书名" width="150" align="center">
+      <el-table-column
+        label="书名"
+        width="150"
+        align="center"
+      >
         <template slot-scope="{ row: { titleWrapper }}">
           <span v-html="titleWrapper" />
         </template>
       </el-table-column>
-      <el-table-column label="作者" width="150" align="center">
+      <el-table-column
+        label="作者"
+        width="150"
+        align="center"
+      >
         <template slot-scope="{ row: { authorWrapper }}">
           <span v-html="authorWrapper" />
         </template>
       </el-table-column>
-      <el-table-column label="出版社" prop="publisher" width="150" align="center" />
-      <el-table-column label="分类" prop="categoryText" width="100" align="center" />
-      <el-table-column label="语言" prop="language" align="center" />
-      <el-table-column v-if="showCover" label="封面图片" width="150" align="center">
+      <el-table-column
+        label="出版社"
+        prop="publisher"
+        width="150"
+        align="center"
+      />
+      <el-table-column
+        label="分类"
+        prop="categoryText"
+        width="100"
+        align="center"
+      />
+      <el-table-column
+        label="语言"
+        prop="language"
+        align="center"
+      />
+      <el-table-column
+        v-if="showCover"
+        label="封面图片"
+        width="150"
+        align="center"
+      >
         <template slot-scope="scope">
-          <a :href="scope.row.cover" target="_blank">
+          <a
+            :href="scope.row.cover"
+            target="_blank"
+          >
             <img
               :src="scope.row.cover"
               style="width:120px;height:180px"
@@ -100,39 +136,84 @@
           </a>
         </template>
       </el-table-column>
-      <el-table-column label="文件名" prop="fileName" width="100" align="center" />
-      <el-table-column label="文件路径" width="100" align="center">
+      <el-table-column
+        label="文件名"
+        prop="fileName"
+        width="100"
+        align="center"
+      />
+      <el-table-column
+        label="文件路径"
+        width="100"
+        align="center"
+      >
         <template slot-scope="{ row: { filePath }}">
           <span>{{ filePath | valueFilter }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="封面路径" width="100" align="center">
+      <el-table-column
+        label="封面路径"
+        width="100"
+        align="center"
+      >
         <template slot-scope="{ row: { coverPath }}">
           <span>{{ coverPath | valueFilter }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="解压路径" width="100" align="center">
+      <el-table-column
+        label="解压路径"
+        width="100"
+        align="center"
+      >
         <template slot-scope="{ row: { unzipPath }}">
           <span>{{ unzipPath | valueFilter }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="上传人" width="100" align="center">
+      <el-table-column
+        label="上传人"
+        width="100"
+        align="center"
+      >
         <template slot-scope="scope">
           <span>{{ scope.row.createUser | valueFilter }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="上传时间" width="100" align="center">
+      <el-table-column
+        label="上传时间"
+        width="100"
+        align="center"
+      >
         <template slot-scope="scope">
           <span>{{ scope.row.createDt | timeFilter }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center" width="120" fixed="right">
+      <el-table-column
+        label="操作"
+        align="center"
+        width="120"
+        fixed="right"
+      >
         <template slot-scope="{ row }">
-          <PreviewDialog title="电子书信息" :data="row">
-            <el-button type="text" icon="el-icon-view" />
+          <PreviewDialog
+            title="电子书信息"
+            :data="row"
+          >
+            <el-button
+              type="text"
+              icon="el-icon-view"
+            />
           </PreviewDialog>
-          <el-button type="text" icon="el-icon-edit" @click="handleUpdate(row)" />
-          <el-button type="text" icon="el-icon-delete" style="color:#f56c6c" @click="handleDelete(row)" />
+          <el-button
+            type="text"
+            icon="el-icon-edit"
+            @click="handleUpdate(row)"
+          />
+          <el-button
+            type="text"
+            icon="el-icon-delete"
+            style="color:#f56c6c"
+            @click="handleDelete(row)"
+          />
         </template>
       </el-table-column>
     </el-table>
@@ -247,6 +328,7 @@ export default {
         this.categoryList = response.data
       })
     },
+    // 获取表格数据
     getList() {
       this.listLoading = true
       listBook(this.listQuery).then(response => {
@@ -270,6 +352,7 @@ export default {
     forceRefresh() {
       window.location.reload()
     },
+    // 排序
     sortChange(data) {
       const { prop, order } = data
       if (prop === 'id') {
@@ -284,10 +367,11 @@ export default {
       }
       this.handleFilter()
     },
-    // 新增图书
+    // 新增电子书
     handleCreate() {
       this.$router.push('/book/create')
     },
+    // 更新电子书
     handleUpdate(row) {
       this.$router.push(`/book/edit/${row.fileName}`)
     },
@@ -308,7 +392,7 @@ export default {
         })
       })
     },
-    getSortClass: function(key) {
+    getSortClass: function (key) {
       const sort = this.listQuery.sort
       return sort === `+${key}`
         ? 'ascending'

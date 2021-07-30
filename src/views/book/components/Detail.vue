@@ -250,7 +250,7 @@ export default {
     }
   },
   methods: {
-    // 获取对应图书的信息并进行显示
+    // 获取对应电子书的信息并进行显示
     getData(fileName) {
       getBook(fileName).then(res => {
         this.setData(res.data.book)
@@ -322,12 +322,12 @@ export default {
       this.$refs.postForm.resetFields()
       // location.reload()
     },
-    // 读取上传的图书信息
+    // 读取上传的电子书信息
     onUploadSuccess(data) {
       // console.log('上传成功')
       this.setData(data)
     },
-    // 移除上传的图书信息
+    // 移除上传的电子书信息
     onUploadRemove() {
       // console.log('移除成功')
       this.setDefaultData()
@@ -353,7 +353,7 @@ export default {
             const book = Object.assign({}, this.postForm)
             delete book.contentsTree
             if (!this.isEdit) {
-              // 创建图书模式
+              // 创建电子书模式
               createBook(book).then(res => {
                 this.Tips(res)
               })
@@ -361,7 +361,7 @@ export default {
                   this.loading = false
                 })
             } else {
-              // 更新图书模式
+              // 更新电子书模式
               updateBook(book).then(res => {
                 this.Tips(res)
               })

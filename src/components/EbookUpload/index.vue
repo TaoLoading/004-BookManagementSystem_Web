@@ -28,7 +28,7 @@
       <div
         v-else
         class="el-upload__text"
-      >图书已上传</div>
+      >电子书已上传</div>
     </el-upload>
   </div>
 </template>
@@ -51,7 +51,7 @@ export default {
   },
   data() {
     return {
-      // 上传图书接口地址
+      // 上传电子书接口地址
       action: `${process.env.VUE_APP_BASE_API}/book/upload`
     }
   },
