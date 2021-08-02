@@ -124,6 +124,7 @@
         width="150"
         align="center"
       >
+        <!-- 封面 -->
         <template slot-scope="scope">
           <a
             :href="scope.row.cover"
@@ -217,6 +218,7 @@
         </template>
       </el-table-column>
     </el-table>
+    <!-- 页码 -->
     <pagination
       v-show="total > 0"
       :total="total"
@@ -284,16 +286,7 @@ export default {
     next()
   },
   methods: {
-    wrapperKeyword(k, v) {
-      function highlight(value) {
-        return '<span style="color: #1890ff">' + value + '</span>'
-      }
-      if (!this.listQuery[k]) {
-        return v
-      } else {
-        return v.replace(new RegExp(this.listQuery[k], 'ig'), v => highlight(v))
-      }
-    },
+    // 解析查询参数
     parseQuery() {
       // 收集查询条件
       const query = Object.assign({}, this.$route.query)
@@ -328,6 +321,19 @@ export default {
         this.categoryList = response.data
       })
     },
+    // 对查询关键词在查询结果中进行高亮显示
+    wrapperKeyword(k, v) {
+      function highlight(value) {
+        return '<span style="color: #1890ff">' + value + '</span>'
+      }
+      // this.listQuery[k]为关键字
+      if (!this.listQuery[k]) {
+        return v
+      } else {
+        // 正则表达式，i代表不区分大小写，g代表全局查询
+        return v.replace(new RegExp(this.listQuery[k], 'ig'), v => highlight(v))
+      }
+    },
     // 获取表格数据
     getList() {
       this.listLoading = true
@@ -339,6 +345,7 @@ export default {
         this.list = data
         this.total = total
         this.listLoading = false
+        // 遍历结果对title和author中的结果进行处理
         this.list.forEach(book => {
           book.titleWrapper = this.wrapperKeyword('title', book.title)
           book.authorWrapper = this.wrapperKeyword('author', book.author)
@@ -375,6 +382,7 @@ export default {
     handleUpdate(row) {
       this.$router.push(`/book/edit/${row.fileName}`)
     },
+    // 删除电子书
     handleDelete(row) {
       this.$confirm('此操作将永久删除该电子书, 是否继续?', '提示', {
         confirmButtonText: '确定',
