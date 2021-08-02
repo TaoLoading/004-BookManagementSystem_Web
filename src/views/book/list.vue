@@ -73,6 +73,7 @@
       fit
       highlight-current-row
       style="width: 100%;"
+      :default-sort="defaultSort"
       @sort-change="sortChange"
     >
       <el-table-column
@@ -218,7 +219,7 @@
         </template>
       </el-table-column>
     </el-table>
-    <!-- 页码 -->
+    <!-- 分页 -->
     <pagination
       v-show="total > 0"
       :total="total"
@@ -241,6 +242,7 @@ export default {
   components: { Pagination, PreviewDialog },
   directives: { waves },
   filters: {
+    // 时间过滤器
     timeFilter(time) {
       if (time) {
         return parseTime(time, '{y}-{m}-{d} {h}:{i}')
@@ -248,6 +250,7 @@ export default {
         return '无'
       }
     },
+    // 值过滤器
     valueFilter(value) {
       if (value) {
         return value
@@ -265,7 +268,8 @@ export default {
       downloadLoading: false,
       listQuery: {},
       showCover: true,
-      categoryList: []
+      categoryList: [],
+      defaultSort: {}
     }
   },
   created() {
@@ -275,10 +279,12 @@ export default {
     this.getList()
     this.getCategoryList()
   },
+  // 路由钩子，解决路由已变化但页面未更新问题
   beforeRouteUpdate(to, from, next) {
     if (to.path === from.path) {
       const newQuery = Object.assign({}, to.query)
       const oldQuery = Object.assign({}, from.query)
+      // 当to.query与from.query不相等时，则证明需要重新加载列表
       if (JSON.stringify(newQuery) !== JSON.stringify(oldQuery)) {
         this.getList()
       }
@@ -288,23 +294,34 @@ export default {
   methods: {
     // 解析查询参数
     parseQuery() {
-      // 收集查询条件
+      // 获取查询条件
       const query = Object.assign({}, this.$route.query)
+      let sort = '+id'
       let listQuery = {
         page: 1,
         pageSize: 20,
-        sort: '-id'
+        sort
       }
+      // 转化成Number类型并合并查询条件
       if (query) {
         query.page && (query.page = Number(query.page))
         query.pageSize && (query.pageSize = Number(query.pageSize))
+        query.sort && (sort = query.sort)
         listQuery = {
           ...listQuery,
           ...query
         }
       }
+      // 保存排序规则
+      const sortSymbol = sort[0]
+      const sortColumn = sort.slice(1, sort.length)
+      this.defaultSort = {
+        order: sortSymbol === '+' ? 'ascending' : 'descending',
+        prop: sortColumn
+      }
       this.listQuery = listQuery
     },
+    // 重新加载页面并补充查询参数
     refresh() {
       this.$router.push({
         path: '/book/list',
@@ -368,8 +385,10 @@ export default {
     },
     sortByID(order) {
       if (order === 'ascending') {
+        // 升序
         this.listQuery.sort = '+id'
       } else {
+        // 降序
         this.listQuery.sort = '-id'
       }
       this.handleFilter()
@@ -389,6 +408,7 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
+        // then里面是点击确定后的内容
         deleteBook(row.fileName).then(response => {
           this.$notify({
             title: '成功',
