@@ -5,6 +5,7 @@ import { asyncRoutes, constantRoutes } from '@/router'
  * @param roles
  * @param route
  */
+// 确定当前用户是否具有相关路由的权限
 function hasPermission(roles, route) {
   if (route.meta && route.meta.roles) {
     return roles.some(role => route.meta.roles.includes(role))
@@ -18,6 +19,7 @@ function hasPermission(roles, route) {
  * @param routes asyncRoutes
  * @param roles
  */
+// 通过递归过滤异步路由
 export function filterAsyncRoutes(routes, roles) {
   const res = []
 
@@ -42,10 +44,12 @@ const state = {
 const mutations = {
   SET_ROUTES: (state, routes) => {
     state.addRoutes = routes
+    // 合并路由
     state.routes = constantRoutes.concat(routes)
   }
 }
 
+// 根据角色确定路由
 const actions = {
   generateRoutes({ commit }, roles) {
     return new Promise(resolve => {

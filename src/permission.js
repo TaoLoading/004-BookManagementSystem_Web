@@ -8,7 +8,8 @@ import getPageTitle from '@/utils/get-page-title'
 
 NProgress.configure({ showSpinner: false }) // NProgress Configuration
 
-const whiteList = ['/login', '/auth-redirect'] // no redirect whitelist
+// 白名单
+const whiteList = ['/login', '/auth-redirect']
 
 router.beforeEach(async(to, from, next) => {
   // 启动进度条
@@ -43,7 +44,7 @@ router.beforeEach(async(to, from, next) => {
           // 调用 router.addRoutes 动态添加路由
           router.addRoutes(accessRoutes)
 
-          // 使用 replace 访问路由，不会在 history 中留下记录
+          // 使用 replace 访问路由，回退时直接回退到空页面而不是登录页面，从而不会在 history 中留下记录
           next({ ...to, replace: true })
         } catch (error) {
           // 移除 Token 数据

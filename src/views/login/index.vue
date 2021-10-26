@@ -131,7 +131,7 @@ export default {
       this.capsTooltip = key && key.length === 1 && (key >= 'A' && key <= 'Z')
     }, */
     checkCapslock({ shiftKey, key } = {}) {
-      console.log(shiftKey, key)
+      // console.log(shiftKey, key)
       // 当key.length值为1时是在输入字母
       if (key && key.length === 1) {
         // 判断是否在输入大写字母
