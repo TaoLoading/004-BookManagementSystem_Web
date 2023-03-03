@@ -11,7 +11,7 @@ NProgress.configure({ showSpinner: false }) // NProgress Configuration
 // 白名单
 const whiteList = ['/login', '/auth-redirect']
 
-router.beforeEach(async(to, from, next) => {
+router.beforeEach(async (to, from, next) => {
   // 启动进度条
   NProgress.start()
 
